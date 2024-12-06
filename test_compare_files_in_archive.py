@@ -10,10 +10,16 @@ from openpyxl import load_workbook
 files_path = 'files'
 resources_path = 'resources'
 
-with zipfile.ZipFile(os.path.join(resources_path, "test.zip"), "w", zipfile.ZIP_DEFLATED) as z:
-    file_list = glob.glob(os.path.join(files_path, "*"), recursive=True)
-    for file in file_list:
-        z.write(file)
+
+def create_directory():
+    os.makedirs(resources_path, exist_ok=True)
+
+
+def archivate_file():
+    with zipfile.ZipFile(os.path.join(resources_path, "test.zip"), "w", zipfile.ZIP_DEFLATED) as z:
+        file_list = glob.glob(os.path.join(files_path, "*"), recursive=True)
+        for file in file_list:
+            z.write(file)
 
 
 def compare_pdf_files(reader1, reader2):
@@ -49,6 +55,9 @@ def compare_csv_files(file1, file2):
 
 
 def test_zip_correct_and_content_verification():
+    create_directory()
+    archivate_file()
+
     with zipfile.ZipFile(os.path.join(resources_path, "test.zip"), "r") as z:
 
         for file_name in z.namelist():
